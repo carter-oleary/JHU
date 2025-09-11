@@ -48,7 +48,8 @@ team_colors = {
 @st.cache_data
 def load_data():
     try:
-        df = pd.read_csv('team_stats_2003_2023.csv')
+        url = "https://github.com/carter-oleary/JHU/blob/main/EN685-662Data_Patterns_And_Representations/Module_3/team_stats_2003_2023.csv?raw=true"
+        df = pd.read_csv(url)
         return df
     except FileNotFoundError:
         # Create sample data structure for demonstration
