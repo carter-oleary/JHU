@@ -1,11 +1,11 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+from sklearn import svm
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.neural_network import MLPRegressor
-from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, mean_squared_error, r2_score
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 import plotly.graph_objects as go
 import plotly.express as px
@@ -77,15 +77,15 @@ def step_1_welcome():
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.markdown("""
-        <div style="text-align: center; background: #f0f2f6; padding: 2rem; margin-bottom: 1rem;border-radius: 15px;">
-            <h2 style="color: black;">Find the best model for your data</h2>
+        <div style="text-align: center; background: #f0f2f6; padding: 2rem; margin-bottom: 1rem; border-radius: 15px;">
+            <h2 style="color: black">Gain valuable insights from your data</h2>
             <p style="font-size: 1.1rem; color: #666;">
                 Upload your CSV dataset and let our automated machine learning pipeline 
-                analyze it using multiple models to find the best predictive model.
+                analyze it using multiple models to find the best predictions.
             </p>
             <div style="margin: 2rem 0;">
-                <div style="color: white; background: navy; padding: 1rem; border-radius: 10px; margin: 1rem 0;">
-                    <strong>📁 Accepted Format:</strong> .csv
+                <div style="background: navy; padding: 1rem; border-radius: 10px; margin: 1rem 0;">
+                    <strong>📁 Accepted Format:</strong> .csv files
                 </div>
                 <div style="background: green; padding: 1rem; border-radius: 10px; margin: 1rem 0;">
                     <strong>🤖 Models:</strong> Linear Regression, Random Forest, Neural Network
@@ -188,7 +188,7 @@ def step_3_model_setup():
         models_info = {
             "🔵 Linear Regression": "Fast, interpretable, works well for linear relationships",
             "🌳 Random Forest": "Robust, handles non-linear patterns, good for most datasets", 
-            "🧠 Neural Network": "Complex patterns, deep learning approach"
+            "🧠 Support Vector Machine": "Better with high dimensional data, handles non-linear patterns"
         }
         
         for model, description in models_info.items():
@@ -253,9 +253,9 @@ def step_4_execution():
     status_text = st.empty()
     
     models = {
-        "Linear Regression": LinearRegression(),
-        "Random Forest": RandomForestRegressor(n_estimators=100, random_state=42),
-        "Neural Network": MLPRegressor(hidden_layer_sizes=(100, 50), max_iter=500, random_state=42)
+        "Linear Regression": LogisticRegression(),
+        "Random Forest": RandomForestClassifier(n_estimators=100, random_state=42),
+        "Support Vector Machine": svm.SVC(kernel='rbf', C=1.0)
     }
     
     results = {}
@@ -265,25 +265,21 @@ def step_4_execution():
         progress_bar.progress((i + 1) / len(models))
         
         # Train model
-        if name == "Neural Network":
-            model.fit(X_train_scaled, y_train)
-            y_pred = model.predict(X_test_scaled)
-        else:
-            model.fit(X_train, y_train)
-            y_pred = model.predict(X_test)
-        
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+            
         # Calculate metrics
+        acc = accuracy_score(y_test, y_pred)
         mse = mean_squared_error(y_test, y_pred)
         rmse = np.sqrt(mse)
-        mae = mean_absolute_error(y_test, y_pred)
         r2 = r2_score(y_test, y_pred)
         
         results[name] = {
             'model': model,
             'predictions': y_pred,
+            'accuracy': acc,
             'mse': mse,
             'rmse': rmse,
-            'mae': mae,
             'r2': r2
         }
     
@@ -307,7 +303,7 @@ def step_5_results():
     results = st.session_state.results
     
     # Find best model based on R² score
-    best_model_name = max(results.keys(), key=lambda x: results[x]['r2'])
+    best_model_name = max(results.keys(), key=lambda x: results[x]['accuracy'])
     
     st.markdown(f'<div class="best-model">🏆 Best Performing Model: {best_model_name}</div>', 
                 unsafe_allow_html=True)
@@ -317,25 +313,31 @@ def step_5_results():
     
     # Create comparison chart
     models = list(results.keys())
+    acc_scores = [results[model]['accuracy'] for model in models]  
     r2_scores = [results[model]['r2'] for model in models]
     rmse_scores = [results[model]['rmse'] for model in models]
     
     fig = make_subplots(
-        rows=1, cols=2,
-        subplot_titles=('R² Score (Higher is Better)', 'RMSE (Lower is Better)'),
-        specs=[[{"secondary_y": False}, {"secondary_y": False}]]
+        rows=1, cols=3,
+        subplot_titles=('Accuracy (Higher is better)', 'R² Score (Higher is Better)', 'RMSE (Lower is Better)'),
+        specs=[[{"secondary_y": False}, {"secondary_y": False}, {"secondary_y": False}]]
+    )
+    
+    fig.add_trace(
+        go.Bar(name='Accuracy', x=models, y=acc_scores, marker_color='lightgreen'),
+        row=1, col=1
     )
     
     # R² scores
     fig.add_trace(
         go.Bar(name='R² Score', x=models, y=r2_scores, marker_color='lightblue'),
-        row=1, col=1
+        row=1, col=2
     )
     
     # RMSE scores
     fig.add_trace(
         go.Bar(name='RMSE', x=models, y=rmse_scores, marker_color='lightcoral'),
-        row=1, col=2
+        row=1, col=3
     )
     
     fig.update_layout(height=400, showlegend=False)
@@ -346,9 +348,9 @@ def step_5_results():
     
     metrics_df = pd.DataFrame({
         'Model': models,
+        'Accuracy (%)': [f"{results[model]['accuracy']*100:.2f}%" for model in models],
         'R² Score': [f"{results[model]['r2']:.4f}" for model in models],
         'RMSE': [f"{results[model]['rmse']:.4f}" for model in models],
-        'MAE': [f"{results[model]['mae']:.4f}" for model in models],
         'MSE': [f"{results[model]['mse']:.4f}" for model in models]
     })
     
