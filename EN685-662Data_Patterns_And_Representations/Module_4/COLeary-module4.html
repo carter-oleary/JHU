@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Quadrant Assessment: AI Customer Support Vendors 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            font-weight: 300;
+            margin-bottom: 15px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .quadrant-section {
+            margin-bottom: 50px;
+        }
+
+        .quadrant-container {
+            position: relative;
+            width: 100%;
+            height: 700px;
+            margin: 30px 0;
+            border: 3px solid #34495e;
+            border-radius: 15px;
+            background: linear-gradient(45deg, #f8f9fa 25%, transparent 25%, transparent 75%, #f8f9fa 75%), 
+                        linear-gradient(-45deg, #f8f9fa 25%, transparent 25%, transparent 75%, #f8f9fa 75%);
+            background-size: 30px 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .axis-line {
+            position: absolute;
+            background: #2c3e50;
+            z-index: 1;
+        }
+
+        .vertical-axis {
+            width: 3px;
+            height: 100%;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+        }
+
+        .horizontal-axis {
+            width: 100%;
+            height: 3px;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .quadrant-label {
+            position: absolute;
+            font-weight: bold;
+            font-size: 1.4em;
+            padding: 15px 20px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 2;
+        }
+
+        .leaders { 
+            top: 30px; 
+            right: 30px; 
+            color: #27ae60;
+            background: linear-gradient(135deg, #d5f4e6, #ffffff);
+        }
+        .challengers { 
+            top: 30px; 
+            left: 30px; 
+            color: #f39c12;
+            background: linear-gradient(135deg, #fef5e7, #ffffff);
+        }
+        .visionaries { 
+            bottom: 30px; 
+            right: 30px; 
+            color: #9b59b6;
+            background: linear-gradient(135deg, #f4ecf7, #ffffff);
+        }
+        .niche { 
+            bottom: 30px; 
+            left: 30px; 
+            color: #e74c3c;
+            background: linear-gradient(135deg, #fadbd8, #ffffff);
+        }
+
+        .vendor-dot {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 3;
+            border: 3px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+        }
+
+        .vendor-dot:hover {
+            transform: scale(1.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .vendor-label {
+            position: absolute;
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .vendor-dot:hover .vendor-label {
+            opacity: 1;
+            transform: translateY(-10px);
+        }
+
+        /* Vendor positioning and colors with logos */
+        .intercom { 
+            background: #338df1; 
+            top: 20%; 
+            right: 15%;
+            background-image: url('data:image/jpeg;base64,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');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        .zendesk { 
+            background: #03a85e; 
+            top: 30%; 
+            right: 25%;
+            background-image: url('data:image/png;base64,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');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        .salesforce { 
+            background: #00a1e0; 
+            top: 15%; 
+            right: 20%;
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaAx4OMNKDO78w1GtSY9IKw8zy3RPjRMbWyg&sdata:image/png;base64,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');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        .ada { 
+            background: #6c5ce7; 
+            bottom: 25%; 
+            right: 35%;
+            background-image: url('data:image/png;base64,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');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        .freshworks { 
+            background: #f39c12; 
+            top: 40%; 
+            left: 20%;
+            background-image: url('data:image/jpeg;base64,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');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .axis-labels {
+            position: absolute;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1em;
+            z-index: 2;
+            background: rgba(255,255,255,0.9);
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+
+        .x-label-left { bottom: 40%; left: 20px; }
+        .x-label-right { bottom: 40%; right: 20px; }
+        .y-label-top { top: 15px; left: 52%; transform: translateX(-50%); }
+        .y-label-bottom { bottom: 15px; left: 52%; transform: translateX(-50%); }
+
+        .vendor-cards {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+        }
+
+        .vendor-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-top: 5px solid;
+            transition: all 0.3s ease;
+        }
+
+
+        .vendor-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .vendor-card h3 {
+            font-size: 1.6em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .vendor-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .quadrant-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .leader { background: #d5f4e6; color: #27ae60; }
+        .challenger { background: #fef5e7; color: #f39c12; }
+        .visionary { background: #f4ecf7; color: #9b59b6; }
+
+        .scores-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .score-category {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid var(--brand-color);
+        }
+
+        .score-category h4 {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .score-bar {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: var(--brand-color);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .score-text {
+            font-size: 0.9em;
+            color: #6c757d;
+            text-align: right;
+        }
+
+        .key-strengths, .positioning-rationale {
+            margin-top: 20px;
+        }
+
+        .key-strengths h4, .positioning-rationale h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .strengths-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .strengths-list li {
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .strengths-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--brand-color);
+            font-weight: bold;
+        }
+
+        /* Brand color variables for each vendor */
+        .vendor-card.intercom {
+            --brand-color: #338df1;
+            --brand-color-light: #5ba3f5;
+        }
+
+        .vendor-card.zendesk {
+            --brand-color: #03a85e;
+            --brand-color-light: #2bb673;
+        }
+
+        .vendor-card.salesforce {
+            --brand-color: #00a1e0;
+            --brand-color-light: #2db3e8;
+        }
+
+        .vendor-card.ada {
+            --brand-color: #6c5ce7;
+            --brand-color-light: #8b7eea;
+        }
+
+        .vendor-card.freshworks {
+            --brand-color: #f39c12;
+            --brand-color-light: #f5b041;
+        }
+
+        .summary-section {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-top: 40px;
+        }
+
+        .summary-section h2 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .recommendations {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .recommendation-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .recommendation-card h4 {
+            color: white;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            .quadrant-container {
+                height: 500px;
+            }            
+            .scores-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Magic Quadrant Assessment</h1>
+            <p>Comprehensive Analysis of Top 5 AI Customer Support Vendors - 2025</p>
+        </div>
+
+        <div class="content">
+            <div class="quadrant-section">
+                <h2 style="text-align: center; color: #2c3e50; font-size: 2.2em; margin-bottom: 30px;">Magic Quadrant Positioning</h2>
+                
+                <div class="quadrant-container">
+                    <div class="axis-line vertical-axis"></div>
+                    <div class="axis-line horizontal-axis"></div>
+                    
+                    <div class="quadrant-label leaders">LEADERS</div>
+                    <div class="quadrant-label challengers">CHALLENGERS</div>
+                    <div class="quadrant-label visionaries">VISIONARIES</div>
+                    <div class="quadrant-label niche">NICHE PLAYERS</div>
+                    
+                    <div class="vendor-dot intercom">
+                        <div class="vendor-label">Intercom Fin AI</div>
+                    </div>
+                    <div class="vendor-dot zendesk">
+                        <div class="vendor-label">Zendesk</div>
+                    </div>
+                    <div class="vendor-dot salesforce">
+                        <div class="vendor-label">Salesforce Service Cloud</div>
+                    </div>
+                    <div class="vendor-dot ada">
+                        <div class="vendor-label">Ada</div>
+                    </div>
+                    <div class="vendor-dot freshworks">
+                        <div class="vendor-label">Freshworks</div>
+                    </div>
+                    
+                    <div class="axis-labels x-label-left">Low Ability to Execute</div>
+                    <div class="axis-labels x-label-right">High Ability to Execute</div>
+                    <div class="axis-labels y-label-top">High Completeness of Vision</div>
+                    <div class="axis-labels y-label-bottom">Low Completeness of Vision</div>
+                </div>
+            </div>
+
+            <div class="vendor-cards">
+                <div class="vendor-card intercom">
+                    <h3>
+                        <div class="vendor-icon" style="background: #338df1;">I</div>
+                        Intercom Fin AI
+                    </h3>
+                    <div class="quadrant-badge leader">LEADER</div>
+                    
+                    <div class="scores-grid">
+                        <div class="score-category">
+                            <h4>Ability to Execute</h4>
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: 90%;"></div>
+                            </div>
+                            <div class="score-text">9.0/10</div>
+                        </div>
+                        <div class="score-category">
+                            <h4>Completeness of Vision</h4>
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: 85%;"></div>
+                            </div>
+                            <div class="score-text">8.5/10</div>
+                        </div>
+                    </div>
+
+                    <div class="key-strengths">
+                        <h4>Key Strengths:</h4>
+                        <ul class="strengths-list">
+                            <li>62% average resolution rate handling complex multi-step processes</li>
+                            <li>Pay-per-resolution model at $0.99 per successful resolution</li>
+                            <li>Automated contextual answers using knowledge base content</li>
+                            <li>Strong real-time engagement and conversational UI</li>
+                            <li>Seamless escalation to human agents when needed</li>
+                        </ul>
+                    </div>
+
+                    <div class="positioning-rationale">
+                        <h4>Positioning Rationale:</h4>
+                        <p>Intercom's Fin AI leads through proven resolution rates and innovative pricing model. Strong execution in conversational AI with focus on mid-market companies seeking modern customer experience, though enterprise adoption still growing compared to traditional leaders.</p>
+                    </div>
+                </div>
+
+                <div class="vendor-card salesforce">
+                    <h3>
+                        <div class="vendor-icon" style="background: #00a1e0;">S</div>
+                        Salesforce Service Cloud
+                    </h3>
+                    <div class="quadrant-badge leader">LEADER</div>
+                    
+                    <div class="scores-grid">
+                        <div class="score-category">
+                            <h4>Ability to Execute</h4>
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: 85%;"></div>
+                            </div>
+                            <div class="score-text">8.5/10</div>
+                        </div>
+                        <div class="score-category">
+                            <h4>Completeness of Vision</h4>
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: 90%;"></div>
+                            </div>
+                            <div class="score-text">9.0/10</div>
+                        </div>
+                    </div>
+
+                    <div class="key-strengths">
+                        <h4>Key Strengths:</h4>
+                        <ul class="strengths-list">
+                            <li>Market-leading enterprise CRM ecosystem integration</li>
+                            <li>Einstein AI with predictive analytics and automation</li>
+                            <li>Unparalleled security and compliance certifications</li>
+                            <li>Comprehensive customer 360-degree view capabilities</li>
+                            <li>Extensive customization and third-party app marketplace</li>
+                        </ul>
+                    </div>
+
+                    <div class="positioning-rationale">
+                        <h4>Positioning Rationale:</h4>
+                        <p>Salesforce dominates through execution excellence in enterprise
+                             deployments and comprehensive platform integration. While AI 
+                             innovation is solid, their strength lies in proven 
+                             reliability and scalability rather than cutting-edge AI 
+                             experimentation, making them ideal for large organizations.
+                            It's main drawback is the long implementation stage to get off the 
+                            ground, making it a difficult choice for some faster moving companies.</p>
+                    </div>
+                </div>
+
+                <div class="vendor-card zendesk">
+                    <h3>
+                        <div class="vendor-icon" style="background: #03a85e;">Z</div>
+                        Zendesk
+                    </h3>
+                    <div class="quadrant-badge leader">LEADER</div>
+                    
+                    <div class="scores-grid">
+                        <div class="score-category">
+                            <h4>Ability to Execute</h4>
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: 80%;"></div>
+                            </div>
+                            <div class="score-text">8.0/10</div>
+                        </div>
+                        <div class="score-category">
+                            <h4>Completeness of Vision</h4>
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: 80%;"></div>
+                            </div>
+                            <div class="score-text">8.0/10</div>
+                        </div>
+                    </div>
+
+                    <div class="key-strengths">
+                        <h4>Key Strengths:</h4>
+                        <ul class="strengths-list">
+                            <li>Comprehensive ticketing system with robust reporting</li>
+                            <li>Extensive marketplace with 1,000+ apps and integrations</li>
+                            <li>Strong multi-channel support (email, chat, phone, social)</li>
+                            <li>Established customer base with proven scalability</li>
+                            <li>Reliable platform stability and uptime performance</li>
+                        </ul>
+                    </div>
+
+                    <div class="positioning-rationale">
+                        <h4>Positioning Rationale:</h4>
+                        <p>Zendesk maintains leader status through consistent execution and platform reliability. However, AI features require higher-tier plans and customization is limited. Their strength lies in human-centered approach and proven scalability rather than AI innovation leadership.</p>
+                    </div>
+                </div>
+
+                <div class="vendor-card ada">
+                    <h3>
+                        <div class="vendor-icon" style="background: #6c5ce7;">A</div>
+                        Ada
+                    </h3>
+                    <div class="quadrant-badge visionary">VISIONARY</div>
+                    
+                    <div class="scores-grid">
+                        <div class="score-category">
+                            <h4>Ability to Execute</h4>
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: 70%;"></div>
+                            </div>
+                            <div class="score-text">7.0/10</div>
+                        </div>
+                        <div class="score-category">
+                            <h4>Completeness of Vision</h4>
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: 40%;"></div>
+                            </div>
+                            <div class="score-text">4.0/10</div>
+                        </div>
+                    </div>
+
+                    <div class="key-strengths">
+                        <h4>Key Strengths:</h4>
+                        <ul class="strengths-list">
+                            <li>Up to 83% autonomous resolution rate with advanced AI</li>
+                            <li>True omnichannel deployment (chat, voice, email, social)</li>
+                            <li>No-code setup with rapid deployment capabilities</li>
+                            <li>Enterprise-grade security (SOC 2, GDPR, HIPAA compliant)</li>
+                            <li>AI-first architecture designed for autonomous operations</li>
+                        </ul>
+                    </div>
+
+                    <div class="positioning-rationale">
+                        <h4>Positioning Rationale:</h4>
+                        <p>Ada represents cutting-edge AI vision with exceptional autonomous resolution capabilities. While building enterprise market presence and integration ecosystem, their innovative AI-first approach positions them as a visionary for organizations willing to invest in next-generation customer service technology.</p>
+                    </div>
+                </div>
+
+                <div class="vendor-card freshworks">
+                    <h3>
+                        <div class="vendor-icon" style="background: #f39c12;">F</div>
+                        Freshworks
+                    </h3>
+                    <div class="quadrant-badge challenger">CHALLENGER</div>
+                    
+                    <div class="scores-grid">
+                        <div class="score-category">
+                            <h4>Ability to Execute</h4>
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: 35%;"></div>
+                            </div>
+                            <div class="score-text">3.5/10</div>
+                        </div>
+                        <div class="score-category">
+                            <h4>Completeness of Vision</h4>
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: 70%;"></div>
+                            </div>
+                            <div class="score-text">7.0/10</div>
+                        </div>
+                    </div>
+
+                    <div class="key-strengths">
+                        <h4>Key Strengths:</h4>
+                        <ul class="strengths-list">
+                            <li>Native Freddy AI built directly into platform (not fragmented)</li>
+                            <li>Competitive pricing with transparent cost structure</li>
+                            <li>User-friendly interface with quick implementation</li>
+                            <li>Strong value proposition for small to mid-market companies</li>
+                            <li>Growing ecosystem with solid integration capabilities</li>
+                        </ul>
+                    </div>
+
+                    <div class="positioning-rationale">
+                        <h4>Positioning Rationale:</h4>
+                        <p>Freshworks positioned as challenger due to strong execution with competitive pricing and user-friendly platform, contrasting with Zendesk's complexity. However, AI vision lacks depth compared to leaders, making them ideal for cost-conscious organizations seeking practical solutions over innovation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <h2>Strategic Recommendations by Organization Type</h2>
+                <p>Based on comprehensive analysis of ability to execute and completeness of vision, here are our strategic recommendations for different organizational contexts:</p>
+
+                <div class="recommendations">
+                    <div class="recommendation-card">
+                        <h4>Large Enterprises (5000+ employees)</h4>
+                        <p><strong>Salesforce Service Cloud</strong> - Unmatched enterprise scalability, comprehensive CRM integration, and proven reliability for complex organizational needs.</p>
+                    </div>
+
+                    <div class="recommendation-card">
+                        <h4>Mid-to-Large Organizations (1000-5000 employees)</h4>
+                        <p><strong>Intercom Fin AI</strong> - Best-in-class AI performance with strong execution track record and innovative features for forward-thinking companies.</p>
+                    </div>
+
+                    <div class="recommendation-card">
+                        <h4>Established Mid-Market (500-1000 employees)</h4>
+                        <p><strong>Zendesk</strong> - Reliable, scalable platform with proven customer support capabilities and comprehensive feature set without unnecessary complexity.</p>
+                    </div>
+
+                    <div class="recommendation-card">
+                        <h4>Growing Companies & SMBs (100-500 employees)</h4>
+                        <p><strong>Freshworks</strong> - Excellent value proposition with user-friendly implementation and solid AI capabilities at competitive pricing.</p>
+                    </div>
+
+                    <div class="recommendation-card">
+                        <h4>AI-First & Innovation-Focused Organizations</h4>
+                        <p><strong>Ada</strong> - Cutting-edge AI capabilities with highest resolution rates, ideal for organizations prioritizing autonomous customer service.</p>
+                    </div>
+
+                    <div class="recommendation-card">
+                        <h4>Implementation Timeline Expectations</h4>
+                        <p><strong>Quick (30-60 days):</strong> Freshworks, Ada<br>
+                        <strong>Medium (60-120 days):</strong> Zendesk, Intercom<br>
+                        <strong>Extended (120+ days):</strong> Salesforce Service Cloud</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
